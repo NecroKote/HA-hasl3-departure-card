@@ -12,6 +12,11 @@ export type ServiceCallAction = {
 
 export type ClickAction = 'info' | EntityInfoAction | ServiceCallAction
 
+interface RegexConfig {
+    search: string
+    replace: string
+}
+
 export interface DepartureCardConfig extends LovelaceCardConfig {
     title?: string
     entity?: string
@@ -30,6 +35,7 @@ export interface DepartureCardConfig extends LovelaceCardConfig {
     show_updated?: boolean
 
     language?: string
+    regex?: RegexConfig
 
     click_action?: ClickAction
 }

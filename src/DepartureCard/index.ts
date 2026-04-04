@@ -207,6 +207,11 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
         if (!departures) return nothing;
         const isMany = this.isManyEntitiesSet()
 
+        const destinationRegex = this.config?.regex ? {
+            search: new RegExp(this.config.regex.search),
+            replace: this.config.regex.replace
+        } : undefined
+
         return html`
             <div class="departures">
                 ${isMany ? '' : renderEntityName()}
@@ -251,6 +256,13 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
 
                     const lineIconClass = this.lineIconClass(dep.line.transport_mode, dep.line.designation, dep.line.group_of_lines)
 
+                    // if destinationRegex is set, use it to extract the part of the destination to show
+                    const destination = (() => {
+                        if (!destinationRegex) return dep.destination
+                        const { search, replace } = destinationRegex
+                        return dep.destination.replace(search, replace)
+                    })()
+
                     return html`
                     <div class="row departure fade-in ${isDeparted ? 'departed' : ''}">
                         ${this.config?.show_icon ? html`
@@ -265,7 +277,7 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
                             </div>
                         `}
                         <div class="col main left">
-                            ${dep.destination}
+                            ${destination}
                             ${hasDeviations ? html`<span class="warning-message">${mostImportantDeviation.message}</span>` : nothing}
                         </div>
                         <div class="col right">

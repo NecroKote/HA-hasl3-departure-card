@@ -547,10 +547,10 @@ var $24c52f343453d62d$export$2e2bcd8739ae039 = {
 });
 
 parcelRegister("j0ZcV", function(module, exports) {
-$parcel$export(module.exports, "css", () => (parcelRequire("j8KxL")).css);
+$parcel$export(module.exports, "nothing", () => (parcelRequire("l56HR")).nothing);
 $parcel$export(module.exports, "html", () => (parcelRequire("l56HR")).html);
 $parcel$export(module.exports, "LitElement", () => (parcelRequire("eGUNk")).LitElement);
-$parcel$export(module.exports, "nothing", () => (parcelRequire("l56HR")).nothing);
+$parcel$export(module.exports, "css", () => (parcelRequire("j8KxL")).css);
 parcelRequire("2emM7");
 parcelRequire("l56HR");
 parcelRequire("eGUNk");
@@ -1138,10 +1138,10 @@ const $f58f44579a4747ac$export$b3890eb0ae9dca99 = (t, i, s)=>{
 parcelRegister("eGUNk", function(module, exports) {
 $parcel$export(module.exports, "css", () => (parcelRequire("j8KxL")).css);
 $parcel$export(module.exports, "ReactiveElement", () => (parcelRequire("2emM7")).ReactiveElement);
-$parcel$export(module.exports, "html", () => (parcelRequire("l56HR")).html);
-$parcel$export(module.exports, "noChange", () => (parcelRequire("l56HR")).noChange);
 $parcel$export(module.exports, "nothing", () => (parcelRequire("l56HR")).nothing);
+$parcel$export(module.exports, "html", () => (parcelRequire("l56HR")).html);
 $parcel$export(module.exports, "render", () => (parcelRequire("l56HR")).render);
+$parcel$export(module.exports, "noChange", () => (parcelRequire("l56HR")).noChange);
 
 $parcel$export(module.exports, "LitElement", () => $ab210b2da7b39b9d$export$3f2f9f5909897157);
 
@@ -1559,8 +1559,8 @@ parcelRequire("j0ZcV");
 var $l56HR = parcelRequire("l56HR");
 var $eGUNk = parcelRequire("eGUNk");
 parcelRequire("1ZxoT");
-var $dsTCw = parcelRequire("dsTCw");
 var $pklEb = parcelRequire("pklEb");
+var $dsTCw = parcelRequire("dsTCw");
 var $829f1babd4ccc0b8$export$6d07abd9f0bba447;
 (function(TransportType) {
     TransportType["METRO"] = "METRO";
@@ -1940,6 +1940,10 @@ class $66d5822390d71e6e$export$7ded24e6705f9c64 extends (0, $eGUNk.LitElement) {
             const departures = this.getDepartures();
             if (!departures) return 0, $l56HR.nothing;
             const isMany = this.isManyEntitiesSet();
+            const destinationRegex = this.config?.regex ? {
+                search: new RegExp(this.config.regex.search),
+                replace: this.config.regex.replace
+            } : undefined;
             return (0, $l56HR.html)`
             <div class="departures">
                 ${isMany ? "" : renderEntityName()}
@@ -1973,6 +1977,12 @@ class $66d5822390d71e6e$export$7ded24e6705f9c64 extends (0, $eGUNk.LitElement) {
                     [(0, $829f1babd4ccc0b8$export$6d07abd9f0bba447).TAXI]: "mdi:taxi"
                 }[dep.line.transport_mode] || "mdi:train";
                 const lineIconClass = this.lineIconClass(dep.line.transport_mode, dep.line.designation, dep.line.group_of_lines);
+                // if destinationRegex is set, use it to extract the part of the destination to show
+                const destination = (()=>{
+                    if (!destinationRegex) return dep.destination;
+                    const { search: search, replace: replace } = destinationRegex;
+                    return dep.destination.replace(search, replace);
+                })();
                 return (0, $l56HR.html)`
                     <div class="row departure fade-in ${isDeparted ? "departed" : ""}">
                         ${this.config?.show_icon ? (0, $l56HR.html)`
@@ -1987,7 +1997,7 @@ class $66d5822390d71e6e$export$7ded24e6705f9c64 extends (0, $eGUNk.LitElement) {
                             </div>
                         `}
                         <div class="col main left">
-                            ${dep.destination}
+                            ${destination}
                             ${hasDeviations ? (0, $l56HR.html)`<span class="warning-message">${mostImportantDeviation.message}</span>` : (0, $l56HR.nothing)}
                         </div>
                         <div class="col right">

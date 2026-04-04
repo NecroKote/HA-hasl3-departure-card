@@ -8,6 +8,22 @@ The format is based on [Keep a Changelog][keep-a-changelog]
 ## [Unreleased]
 ## What's Changed
 
+## [3.4.2] (2026-04-04)
+## What's Changed
+* Added new advanced configuration option (no editor support) - `regex`.
+
+  This allows you to specify a regex to extract the part of the destination to show.
+  It has two properties - `search` and `replace`.
+
+  `search` is the regex to search for in the destination, and `replace` is the string to replace the matched part with. Match groups are supported in the `replace` string. For example, if you want to insert the dash between the first letter of the destination and the rest of the string, you can use the following configuration:
+
+  ```yaml
+  regex:
+    search: (\w)(.*)
+    replace: $1 - $2
+  ```
+
+
 ## [3.4.1] (2025-02-04)
 ## What's Changed
 * Added slight border to bus lane badge to make it more visible
