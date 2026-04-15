@@ -28,8 +28,8 @@
     "parcel-namer-rewrite": "^2.10.3-rc.2",
     "typescript": "^5.4.2"
   },
-  "volta": {
-    "node": "18.19.1"
+  "engines": {
+    "node": ">=24.0.0 <25.0.0"
   },
   "parcel-namer-rewrite": {
     "chain": "@parcel/namer-default",
