@@ -7,12 +7,15 @@
     "prebuild": "rm -rf dist/*",
     "build": "rollup -c",
     "watch": "rollup -c --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src/",
+    "format": "biome format --write src/"
   },
   "dependencies": {
     "lit": "^3.3.2"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.12",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "browserslist-to-esbuild": "^2.1.1",
     "custom-card-helpers": "^1.9.0",
