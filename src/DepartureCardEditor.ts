@@ -1,9 +1,10 @@
 import type { HomeAssistant, LovelaceCardEditor } from "custom-card-helpers"
-import { LitElement, css, html } from "lit"
-import { customElement, property, state } from "lit/decorators"
+import { LitElement, html } from "lit"
+import { customElement, property, state } from "lit/decorators.js"
 
 import { DepartureCardConfig } from './DepartureCard/DepartureCard.config'
-import { getLanguage, translateTo, languages } from "./translations"
+import type { TranslationKey } from "./translations"
+import { getLanguage, translateTo } from "./translations"
 
 @customElement('hasl4-departure-card-editor')
 export class HASLDepartureCardEditor extends LitElement implements LovelaceCardEditor {
@@ -27,8 +28,8 @@ export class HASLDepartureCardEditor extends LitElement implements LovelaceCardE
     }
   }
 
-  private getSchema = (_ : (key :string) => string) => {
-    const haveMultipleEntities = this._config?.entities?.length > 1
+  private getSchema = (_ : (key: TranslationKey) => string) => {
+    const haveMultipleEntities = (this._config?.entities?.length ?? 0) > 1
 
     return [
     { name: "title", selector: { text: {} } },
@@ -88,7 +89,7 @@ export class HASLDepartureCardEditor extends LitElement implements LovelaceCardE
     this._dispatchConfigChangedEvent(ev.detail.value)
   }
 
-  private _dispatchConfigChangedEvent(newConfig) {
+  private _dispatchConfigChangedEvent(newConfig: Partial<DepartureCardConfig>) {
     const event = new Event("config-changed", { bubbles: true, composed: true});
     event.detail = { config: newConfig };
     this.dispatchEvent(event);
@@ -103,7 +104,7 @@ export class HASLDepartureCardEditor extends LitElement implements LovelaceCardE
         .hass=${this.hass}
         .data=${this._config}
         .schema=${this._schema || []}
-        .computeLabel=${(item, data) => _(`editor_${item.name}`) || item.label || item.name }
+        .computeLabel=${(item: { name: string; label?: string }) => _(`editor_${item.name}` as TranslationKey) || item.label || item.name }
         @value-changed=${this._valueChanged}>
       </ha-form>
     `

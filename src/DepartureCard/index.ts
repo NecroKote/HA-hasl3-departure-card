@@ -1,5 +1,5 @@
-import { LitElement, html, nothing, css } from 'lit'
-import { property, state } from 'lit/decorators';
+import { LitElement, html, nothing } from 'lit'
+import { property, state } from 'lit/decorators.js';
 
 import type { HomeAssistant, LovelaceCard } from "custom-card-helpers";
 import type { HassEntity } from "home-assistant-js-websocket";
@@ -35,15 +35,15 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
                 const [_, attrs] = this.getFirstEntity()
                 if (!attrs) return 0
 
-                return (this.config.show_entity_name && attrs.friendly_name) ? 1 : 0
+                return (this.config?.show_entity_name && attrs.friendly_name) ? 1 : 0
             })()
 
         const deps = this.getDepartures();
 
         const size = [
-            !!this.config.title ? 1 : 0,
+            this.config?.title ? 1 : 0,
             singleEntitityExtras,
-            !!this.config.show_header ? 1 : 0,
+            this.config?.show_header ? 1 : 0,
             deps?.length || 0,
         ].reduce((sum, entity) => sum += entity ? entity : 0, 0);
 
@@ -108,10 +108,12 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
         `
     }
 
-    private isManyEntitiesSet = () => this.config?.entities?.length > 1
+    private isManyEntitiesSet = () => (this.config?.entities?.length ?? 0) > 1
 
     private getFirstEntity(): [HassEntity, DepartureAttributes] | [undefined, undefined] {
-        const data = this.hass?.states[this.config?.entities?.[0] || this.config?.entity];
+        const entityId = this.config?.entities?.[0] || this.config?.entity;
+        if (!entityId) return [undefined, undefined]
+        const data = this.hass?.states[entityId];
         const attrs = data?.attributes
         if (data && attrs && isDepartureAttrs(attrs)) {
             return [data, attrs]
@@ -135,7 +137,7 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
             if (!this.config?.hide_departed) return true
 
             const diff = diffMinutes(new Date(d.expected), now)
-            return diff + this.config?.show_departed_offeset >= 0
+            return diff + (this.config?.show_departed_offeset ?? 0) >= 0
         }) || []).slice(0, this.config?.max_departures)
     }
 
@@ -156,16 +158,18 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
             // map entity name to departures and gather all together
             .map(entity => {
                 const state = this.hass?.states[entity]
-                if (isDepartureAttrs(state.attributes))
+                if (state && isDepartureAttrs(state.attributes))
                     return state.attributes
+                return undefined
             })
+            .filter((attrs): attrs is DepartureAttributes => attrs !== undefined)
             .flatMap(attrs => attrs.departures)
             // filter by departure time
             .filter((d) => {
                 if (!this.config?.hide_departed) return true
 
                 const diff = diffMinutes(new Date(d.expected), now)
-                return diff + this.config?.show_departed_offeset >= 0
+                return diff + (this.config?.show_departed_offeset ?? 0) >= 0
             })
             // filter direction
             .filter((d) => {
@@ -194,7 +198,7 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
             const [_, attrs] = this.getFirstEntity()
             if (!attrs) return nothing;
 
-            return (this.config.show_entity_name && attrs.friendly_name)
+            return (this.config?.show_entity_name && attrs.friendly_name)
                 ? html`<div class="row name">${attrs.friendly_name}</div`
                 : nothing
         };
@@ -215,7 +219,7 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
         return html`
             <div class="departures">
                 ${isMany ? '' : renderEntityName()}
-                ${this.config.show_header ? html`
+                ${this.config?.show_header ? html`
                     <div class="row header">
                         ${this.config?.show_icon ? html`<div class="col icon"></div>` : nothing}
                         <div class="col main left">${_("line")}</div>
@@ -278,7 +282,7 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
                         `}
                         <div class="col main left">
                             ${destination}
-                            ${hasDeviations ? html`<span class="warning-message">${mostImportantDeviation.message}</span>` : nothing}
+                            ${hasDeviations && mostImportantDeviation ? html`<span class="warning-message">${mostImportantDeviation.message}</span>` : nothing}
                         </div>
                         <div class="col right">
                             <span class="leaves-in">${departureTime}</span>
@@ -340,8 +344,8 @@ export class HASLDepartureCard extends LitElement implements LovelaceCard {
         }
     }
 
-    private _serviceCall (domain, service, data) {
-        this.hass.callService(domain, service, data)
+    private _serviceCall (domain: string, service: string, data: object) {
+        this.hass?.callService(domain, service, data)
     }
 
     private _showAttributes (el: HTMLElement, type: string, detail?: object, options?: { bubbles?: boolean, cancelable?: boolean, composed?: boolean }) {

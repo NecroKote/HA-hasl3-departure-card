@@ -95,6 +95,6 @@ export const translations: {[lang: string]: Translation} = {
 }
 
 export const languages = Object.keys(translations)
-export const t = (key: TranslationKey, lang?: string): string => translations[lang]?.[key] ?? defaultTranslation[key]
+export const t = (key: TranslationKey, lang?: string): string => (lang ? translations[lang]?.[key] : undefined) ?? defaultTranslation[key]
 export const getLanguage = (configLang?: string): string => configLang ?? navigator.language ?? defaultLang
 export const translateTo = (lang?: string) => (key: TranslationKey) => t(key, lang)
