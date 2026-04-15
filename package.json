@@ -2,6 +2,7 @@
   "name": "hasl-departure-card",
   "version": "3.4.2",
   "description": "HASL Departure Lovelace Card",
+  "browserslist": "ios >= 12, android >= 5, last 2 versions, > 0.5%, not dead",
   "source": "src/index.ts",
   "module": "dist/hasl4-departure-card.js",
   "targets": {
