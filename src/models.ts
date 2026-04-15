@@ -1,11 +1,11 @@
 export enum TransportType {
-    METRO = 'METRO',
-    BUS = 'BUS',
-    TRAM = 'TRAM',
-    TRAIN = 'TRAIN',
-    SHIP = 'SHIP',
-    FERRY = 'FETTRY',
-    TAXI = 'TAXI',
+    METRO = "METRO",
+    BUS = "BUS",
+    TRAM = "TRAM",
+    TRAIN = "TRAIN",
+    SHIP = "SHIP",
+    FERRY = "FETTRY",
+    TAXI = "TAXI",
 }
 
 export type DepartureDeviation = {

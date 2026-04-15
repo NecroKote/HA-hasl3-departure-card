@@ -1,4 +1,4 @@
-import { LovelaceCardConfig } from "custom-card-helpers"
+import type { LovelaceCardConfig } from "custom-card-helpers"
 
 export type EntityInfoAction = {
     entityId: string
@@ -10,7 +10,7 @@ export type ServiceCallAction = {
     data: object
 }
 
-export type ClickAction = 'info' | EntityInfoAction | ServiceCallAction
+export type ClickAction = "info" | EntityInfoAction | ServiceCallAction
 
 interface RegexConfig {
     search: string
@@ -41,7 +41,7 @@ export interface DepartureCardConfig extends LovelaceCardConfig {
 }
 
 export const DEFAULT_CONFIG: Partial<DepartureCardConfig> = {
-    title: '',
+    title: "",
     entities: [],
 
     show_entity_name: true,
@@ -54,5 +54,5 @@ export const DEFAULT_CONFIG: Partial<DepartureCardConfig> = {
     show_departed_offeset: 5,
     show_updated: true,
 
-    tap_action: 'info',
+    tap_action: "info",
 }

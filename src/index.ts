@@ -2,10 +2,10 @@ import { HASLDepartureCard } from "./DepartureCard"
 
 declare global {
     interface Window {
-        customCards: Array<Object>
+        customCards: Array<object>
     }
 }
-customElements.define('hasl4-departure-card', HASLDepartureCard)
+customElements.define("hasl4-departure-card", HASLDepartureCard)
 
 window.customCards = window.customCards || []
 window.customCards.push({
